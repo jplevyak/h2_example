@@ -22,7 +22,10 @@ pub async fn main() -> Result<(), Box<dyn Error>> {
 }
 
 async fn serve(socket: TcpStream) -> Result<(), Box<dyn Error + Send + Sync>> {
-    let mut connection = h2::server::handshake(socket).await?;
+    let mut connection = h2::server::Builder::new()
+        .enable_connect_protocol()
+        .handshake(socket)
+        .await?;
 
     while let Some(result) = connection.accept().await {
         println!("accept stream");

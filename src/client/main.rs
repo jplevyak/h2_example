@@ -1,5 +1,5 @@
 use h2::client;
-use http::{Method, Request};
+use http::Request;
 use std::error::Error;
 use tokio::net::TcpStream;
 
@@ -19,9 +19,8 @@ pub async fn main() -> Result<(), Box<dyn Error>> {
 
     println!("sending request");
 
-    let request = Request::builder()
-        .method(Method::GET)
-        .uri("https://localhost/")
+    let request = Request::connect("http://localhost")
+        .extension(h2::ext::Protocol::from("myprotocol"))
         .body(())
         .unwrap();
 
